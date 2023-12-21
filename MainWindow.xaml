@@ -1,0 +1,13 @@
+﻿<Window x:Class="TestTask.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestTask"
+        mc:Ignorable="d"
+        Title="Погода" Height="450" Width="800">
+    <Grid>
+        <TextBox x:Name="SityTextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" Width="195" Height="30" Margin="250,50,330,330" SelectionOpacity="0" TextAlignment="Center"/>
+        <Button x:Name="WeatherButton" Content="Погода" Margin="455,50,225,330" Width="95" Height="30" Click="GetWeather" IsEnabled="False"/>
+    </Grid>
+</Window>
