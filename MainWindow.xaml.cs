@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace TestTask
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -38,14 +25,15 @@ namespace TestTask
 
         async private void GetWeather(object sender, RoutedEventArgs e)
         {
-            Api api = new();
+            Service service = new(); 
             try
             {
-                await api.GetWeather(SityTextBox.Text);
+                String weatherInfo = await service.GetWeather(SityTextBox.Text);
+                Info.Content = weatherInfo;
             } 
             catch (HttpRequestException exception)
             {
-                ExceptionLabel.Content = exception.Message;
+                Info.Content = exception.Message;
             }
         }
     }

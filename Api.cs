@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace TestTask
             return cityCoordinates; 
         }
 
-        async public Task<String> GetWeather(String city)
+        async public Task<WeatherModel> GetWeather(String city)
         {
             CityCoordinateModel[] cityCoordinates = await GetCoordinatesOfSity(city);
 
@@ -35,7 +36,19 @@ namespace TestTask
                 throw new HttpRequestException("Город не найден.");
             }
 
-            return "Good!!!";
+            String lat = cityCoordinates[0].lat.ToString();
+            String lon = cityCoordinates[0].lon.ToString();
+
+            var response = await client.GetAsync("https://api.openweathermap.org/data/3.0/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new HttpRequestException("Api ключ недействителен");
+            }
+
+            WeatherModel? weather = await response.Content.ReadFromJsonAsync<WeatherModel>();
+
+            return weather;
         }
     }
 }

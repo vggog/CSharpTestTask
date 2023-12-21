@@ -9,6 +9,6 @@
     <Grid>
         <TextBox x:Name="SityTextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" Width="195" Height="30" Margin="250,50,330,330" SelectionOpacity="0" TextAlignment="Center"/>
         <Button x:Name="WeatherButton" Content="Погода" Margin="455,50,225,330" Width="95" Height="30" Click="GetWeather" IsEnabled="False"/>
-        <Label x:Name="ExceptionLabel" Content="" Margin="262,92,342,292"/>
+        <Label x:Name="Info" Content="" Margin="262,107,238,50"/>
     </Grid>
 </Window>
