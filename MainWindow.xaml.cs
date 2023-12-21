@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,9 +36,17 @@ namespace TestTask
             }
         }
 
-        private void GetWeather(object sender, RoutedEventArgs e)
+        async private void GetWeather(object sender, RoutedEventArgs e)
         {
-            SityTextBox.Text = "Нажал";
+            Api api = new();
+            try
+            {
+                await api.GetWeather(SityTextBox.Text);
+            } 
+            catch (HttpRequestException exception)
+            {
+                ExceptionLabel.Content = exception.Message;
+            }
         }
     }
 }
