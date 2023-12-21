@@ -9,19 +9,21 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Collections.Specialized;
+using System.Diagnostics;
 
 namespace TestTask
 {
     internal class Api
     {
-        string API_KEY = "key";
-
         HttpClient client = new HttpClient();
 
         async private Task<CityCoordinateModel[]> GetCoordinatesOfSity(String city)
         {
-            var response = await client.GetAsync(@"http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=" + API_KEY);
-            
+            String url = String.Format(Settings.COORDINATES_API_URL, city, Settings.API_KEY);
+            var response = await client.GetAsync(url);
+
             CityCoordinateModel[]? cityCoordinates = await response.Content.ReadFromJsonAsync<CityCoordinateModel[]>();
 
             return cityCoordinates; 
@@ -39,7 +41,8 @@ namespace TestTask
             String lat = cityCoordinates[0].lat.ToString();
             String lon = cityCoordinates[0].lon.ToString();
 
-            var response = await client.GetAsync("https://api.openweathermap.org/data/3.0/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY);
+            String url = String.Format(Settings.WEATHER_API_URL, lat, lon, Settings.API_KEY);
+            var response = await client.GetAsync(url);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
