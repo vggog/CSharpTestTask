@@ -19,18 +19,44 @@ namespace TestTask
     {
         HttpClient client = new HttpClient();
 
+        async private Task<HttpResponseMessage> SendRequest(String url)
+        {
+            var response = await client.GetAsync(url);
+    
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new HttpRequestException("Api ключ недействителен");
+            }
+            else if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new HttpRequestException("Ошибка.");
+            }
+           
+
+            return response;
+        }
+
         async private Task<CityCoordinateModel[]> GetCoordinatesOfSity(String city)
         {
             String url = String.Format(Settings.COORDINATES_API_URL, city, Settings.API_KEY);
-            var response = await client.GetAsync(url);
+            var response = await SendRequest(url);
+            CityCoordinateModel[] cityCoordinates;
 
-            CityCoordinateModel[]? cityCoordinates = await response.Content.ReadFromJsonAsync<CityCoordinateModel[]>();
+            try
+            {
+                cityCoordinates = await response.Content.ReadFromJsonAsync<CityCoordinateModel[]>();
+            }
+            catch (JsonException) 
+            {
+                throw new HttpRequestException("Ошибка валидации JSON");
+            }
 
             return cityCoordinates; 
         }
 
         async public Task<WeatherModel> GetWeather(String city)
         {
+            WeatherModel weather;
             CityCoordinateModel[] cityCoordinates = await GetCoordinatesOfSity(city);
 
             if (cityCoordinates.Length == 0)
@@ -42,14 +68,16 @@ namespace TestTask
             String lon = cityCoordinates[0].lon.ToString();
 
             String url = String.Format(Settings.WEATHER_API_URL, lat, lon, Settings.API_KEY);
-            var response = await client.GetAsync(url);
+            var response = await SendRequest(url);
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            try
             {
-                throw new HttpRequestException("Api ключ недействителен");
+                weather = await response.Content.ReadFromJsonAsync<WeatherModel>();
             }
-
-            WeatherModel? weather = await response.Content.ReadFromJsonAsync<WeatherModel>();
+            catch (JsonException)
+            {
+                throw new HttpRequestException("Ошибка валидации JSON");
+            }
 
             return weather;
         }

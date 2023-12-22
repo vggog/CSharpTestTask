@@ -17,7 +17,7 @@ namespace TestTask
         {
             WeatherButton.IsEnabled = true;
 
-            if (SityTextBox.Text == "")
+            if (CityTextBox.Text == "")
             {
                 WeatherButton.IsEnabled = false;
             }
@@ -28,7 +28,7 @@ namespace TestTask
             Service service = new(); 
             try
             {
-                String weatherInfo = await service.GetWeather(SityTextBox.Text);
+                String weatherInfo = await service.GetWeather(CityTextBox.Text);
                 Info.Content = weatherInfo;
             } 
             catch (HttpRequestException exception)
